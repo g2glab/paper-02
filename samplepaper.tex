@@ -15,24 +15,24 @@
 
 \begin{document}
 %
-\title{Mapping RDF Graphs to Property Graphs}
+\title{Property Graph xxxx Format}
 %
 %\titlerunning{Abbreviated paper title}
 % If the paper title is too long for the running head, you can set
 % an abbreviated paper title here
 %
-\author{Shota Matsumoto\inst{1} \and Ryota Yamanaka\inst{2} \and Hirokazu Chiba\inst{3}}
+\author{Ryota Yamanaka\inst{1} \and Shota Matsumoto\inst{2} \and Hirokazu Chiba\inst{3}}
 %
-\authorrunning{S. Matsumoto et al.}
+\authorrunning{R. Yamanaka et al.}
 % First names are abbreviated in the running head.
 % If there are more than two authors, 'et al.' is used.
 %
 \institute{
-Lifematics Inc., Tokyo 101-0041, Japan\\
-\email{shota.matsumoto@lifematics.co.jp}
-\and
 Oracle Corporation, Bangkok 10500, Thailand\\
 \email{ryota.yamanaka@oracle.com}
+\and
+Lifematics Inc., Tokyo 101-0041, Japan\\
+\email{shota.matsumoto@lifematics.co.jp}
 \and
 Database Center for Life Science, Chiba 277-0871, Japan\\
 \email{chiba@dbcls.rois.ac.jp}
@@ -41,126 +41,84 @@ Database Center for Life Science, Chiba 277-0871, Japan\\
 \maketitle              % typeset the header of the contribution
 %
 \begin{abstract}
-% The abstract should briefly summarize the contents of the paper in 15--250 words.
-Increasing amounts of scientific and social data are published in the Resource Description Framework (RDF). Although the RDF data can be queried using the SPARQL language, even the SPARQL-based operation has a limitation in implementing traversal or analytical algorithms.
-Recently, a variety of graph database implementations dedicated to analyses on the property graph model have emerged.
-However, the RDF model and the property graph model are not interoperable.
-Here, we developed a framework based on the Graph to Graph Mapping Language (G2GML) for mapping RDF graphs to property graphs to make the most of accumulated RDF data.
-Using this framework, graph data described in the RDF model can be converted to the property graph model and can be loaded to several graph database engines for further analysis. Future works include implementing and utilizing graph algorithms to make the most of the accumulated data in various analytical engines.
+Property graph is an intuitive data structure for expressing information as network graphs. Although a variety of graph databases are designed for managing data as property graph, the definitions of this data structure and its data formats are various and often depend on the implementation. Therefore, in this paper, we discussed general definition of property graph based on the observation of the existing graph databases, and proposed a practical data format which can store the most information included in other data formats. This data format is useful for keeping property graph data independent from graph database implementation, specially when we generate property graph data intermediately from other data sources in data integration pipelines. We also implemented a prototype of conversion tools to show that the data in this data format can be exchanged for various graph databases.
 
-\keywords{RDF \and Property Graph \and Graph Database}
+\keywords{Property Graph \and Graph Database}
 \end{abstract}
 
 \section{Introduction}
-% Please note that the first paragraph of a section or subsection is not indented. The first paragraph that follows a table, figure, equation etc. does not need an indent, either.
-
-Increasing amounts of scientific and social data are described as graphs. As a format of graph data, the Resource Description Framework (RDF) is widely used. Although RDF data can be queried using the SPARQL language in a flexible way, SPARQL is not dedicated to traversal of graphs and has a limitation in implementing graph analysis algorithms.
 
 In the context of graph analysis, the property graph model~\cite{angles} is becoming popular; various graph database engines, including Neo4j~\cite{neo4j}, Oracle Labs PGX~\cite{pgx}, and Amazon Neptune~\cite{neptune}, adopt this model. These graph database engines support algorithms for traversal or analyzing graphs. However, currently not many datasets are consistently described in the property graph model, so the application of these powerful engines are limited.
 
-Considering this situation, it is valuable to develop a method to transform RDF data into property graphs. However, the transformation is not straightforward due to the differences in the data model. 
-In RDF graphs, all information is expressed as the triple (node-edge-node), whereas in property graphs, arbitrary information can be contained in each of the nodes and edges as key-value form. 
-Although previous works addressed this issue by formalizing transformations~\cite{hartig},
-users cannot define their specific mappings intended for each use case.
 
-Here, we developed a framework based on the Graph to Graph Mapping Language (G2GML) for mapping RDF graphs to property graphs. Using this framework, accumulated graph data described in the RDF model can be converted to the property graph model and can be loaded to several graph database engines. 
+\section{Definition}
 
-\section{Methods}
+A property graph has the following characteristics:
+• It contains nodes and edges.
+• Each of nodes and edges can contain properties (key-value pairs).
+• Each node can be labeled with zero or more labels.
+• Each edge can be labeled with zero or more labels.
+• Edges can be directed or undirected.
 
-Figure~\ref{fig:dataflow} shows the overview of proposed framework.
-In the proposed framework, users write mappings from RDF graphs to property graphs in G2GML.
-This mapping can be processed by an implementation called \textit{G2G Mapper}, which is implemented by authors (available on \url{https://github.com/g2gml}). This tool retrieves RDF data from SPARQL endpoints and converts them to property graph data in several different formats specified by popular graph databases.
+Definition  (Property Graph)
 
-G2GML is a declarative language which consists of pairs of RDF graph patterns and property graph patterns. 
-An intuitive meaning of a G2GML is a mapping between RDF subgraphs that matches the described patterns and described components of the property graph. In the next section, we briefly explain the syntax of G2GML with a concrete example usage.
+A Property Graph is a tuple PG = ⟨V, E_u, E_d, S, P, s_e, t_e, e_e, l_v, l_e, p_v, p_e⟩, where:
+1. V is a set of nodes,
+2. E_u is a set of undirected edges,
+3. E_d is a set of directed edges,
+3. S is a set of strings,
+4. P contains each properties that has a form p = ⟨k,v⟩, where k ∈ S and v ∈ S,
+5. s_e : E_d → V is a function which yields the source of each directed edge,
+6. t_e : E_d → V is a function which yields the target of each directed edge,
+7, e_e: E_u → < V × V> is a function which yields the endpoints of each undirected edges,
+7. l_v : V → 2^S is a function mapping each nodes to their multiple labels,
+8. l_e : (E_d ∪ E_u) → 2^S is a function mapping each edge to their multiple labels,
+9. p_v : V → 2^P is a function used to assign nodes to their multiple properties.
+10. p_e : (E_d ∪ E_u) → 2^P is a function used to assign edges to their multiple properties.
 
-\begin{figure}
-\center
-\includegraphics[width=1.0\textwidth]{dataflow.png}
-\caption{Overview of G2GML mapping}
-\label{fig:dataflow}
-\end{figure}
+\section{Data Format}
 
-\section{Example}
-
-Figure~\ref{fig:conversion} shows an example of G2GML mapping, which converts RDF data retrieved from DBpedia into property graph data. When we focus on relationships that one musician and another are in the same group, the information can be summarized into the property graph data as shown in this figure.
-
-\begin{figure}
-\center
-\includegraphics[width=1.0\textwidth]{example.jpg}
-\caption{Mapping of RDF data}
-\label{fig:conversion}
-\end{figure}
-
-For this conversion, the actual G2GML is described as in Figure~\ref{fig:g2gml}. It starts with URI prefixes used to write mappings, and then, each mapping consists of one unindented line of a property graph pattern and indented lines of an RDF graph pattern. A property graph pattern is written in a syntax like Cypher (the query language of Neo4j), whereas an RDF graph pattern is written as a pattern in SPARQL. Variables in each pattern are mapped by those names. This example contains one node mapping for \texttt{Musician} entity and one edge mapping for \texttt{same\_group} relationship only. In G2GML, edge mappings are defined based on the conditions of node mappings, which means that edges are generated in property graph iff both nodes' patterns and edges' patterns are matched in RDF graph. Also, \texttt{mus, nam, dat, twn} and \texttt{len} are used as variables to extract resources and literals from RDF graph. In the resulting property graph, resources can be mapped to nodes, while literals can be mapped to values of properties.
+Figure~\ref{fig:format-pg} shows an example of property graph format.
 
 \begin{figure}[!t]
 \vspace{2mm}
 \begin{scriptsize}
 \begin{verbatim}
-# Prefixes
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX prop: <http://dbpedia.org/property/>
-PREFIX schema: <http://schema.org/>
-PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
-PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+# NODES
+101  :person  name:"Barack Obama"  country:"United States"
+102  :person  name:"Shinzo Abe"  country:Japan
 
-# Node mapping
-(mus:Musician {vis_label:nam, born:dat, hometown:twn})                    # PG Pattern
-    ?mus rdf:type foaf:Person, dbpedia-owl:MusicalArtist .                # RDF Pattern
-    ?mus rdfs:label ?nam .
-    OPTIONAL { ?mus prop:born ?dat }
-    OPTIONAL { ?mus dbpedia-owl:hometown / rdfs:label ?twn }
-
-# Edge mapping
-(mus1:Musician)-[:same_group {label:nam, length:len}]->(mus2:Musician)    # PG Pattern
-    ?grp a schema:MusicGroup ;                                            # RDF Pattern
-         dbpedia-owl:bandMember ?mus1 , ?mus2 .
-    FILTER(?mus1 != ?mus2)
-    OPTIONAL { ?grp rdfs:label ?nam. FILTER(lang(?nam) = "ja")}
-    OPTIONAL { ?grp dbpedia-owl:wikiPageLength ?len }
+# EDGES
+101  104  :admires  score:20.0  since:2015
+102  103  :collaborates  since:2010
 \end{verbatim}
 \end{scriptsize}
-\caption{G2GML mapping definition}
-\label{fig:g2gml}
+\caption{Flat Text Format}
+\label{fig:format-pg}
 \end{figure}
-
-Finally, Figure~\ref{fig:sparql} shows the SPARQL query to retrieve the pairs of musicians who are in the same group. After G2GML mapping above, we can load the generated property graph data into graph databases, such as Oracle Labs PGX, and the query can be written in PGQL (the query language of PGX).
 
 \begin{figure}[!t]
 \vspace{2mm}
 \begin{scriptsize}
 \begin{verbatim}
-# SPARQL
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX schema: <http://schema.org/>
-PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
-SELECT DISTINCT
-    ?nam1 ?nam2
-WHERE {
-    ?mus1 rdf:type foaf:Person , dbpedia-owl:MusicalArtist .
-    ?mus2 rdf:type foaf:Person , dbpedia-owl:MusicalArtist .
-    ?mus1 rdfs:label ?nam1 . FILTER(lang(?nam1) = "ja") .
-    ?mus1 rdfs:label ?nam2 . FILTER(lang(?nam2) = "ja") .
-    ?grp a schema:MusicGroup ;
-         dbpedia-owl:bandMember ?mus1 , ?mus2 .
-    FILTER(?mus1 != ?mus2)
+{
+  "nodes":[
+    {"_id":101, "_label":"person", "name":"Barack Obama", "country":"United States"}
+  , {"_id":101, "_label":"person", "name":"Shinzo Abe", "country":"United States"}
+  ],
+  "edges":[
+    {"_from":101, "_to":104, "_label":"admires", "score":20.0, "since":2015}
+  , {"_from":102, "_to":103, "_label":"collaborates", "since":2010}
+  ]
 }
-
-# PGQL
-SELECT DISTINCT m1.name, m2.name WHERE (m1)-[same_group]-(m2)
 \end{verbatim}
 \end{scriptsize}
-\caption{SPARQL and PGQL}
-\label{fig:sparql}
+\caption{JSON Format}
+\label{fig:format-jsonpg}
 \end{figure}
-
 
 \section{Conclusion}
-In this work, we defined G2GML for mapping RDF graphs to property graphs and implemented a converter based on the G2GML. We also showed an example usage of G2GML. Future works include further analysis of the converted graph data on the database engines adopting the property graph model.
-
+In this work, we defined property graph independently from graph database implementation and proposed practical data formats. We also implemented the prototype of tools to convert this data format to other formats. Future works include ..
 
 %
 % ---- Bibliography ----
@@ -188,24 +146,5 @@ Amazon Neptune, \url{https://aws.amazon.com/neptune/}.
 \bibitem{hartig}
 Hartig, O.: Reconciliation of RDF* and property graphs. arXiv preprint arXiv:1409.3288 (2014)
 
-% \bibitem{ref_article1}
-% Author, F.: Article title. Journal \textbf{2}(5), 99--110 (2016)
-
-% \bibitem{ref_lncs1}
-% Author, F., Author, S.: Title of a proceedings paper. In: Editor,
-% F., Editor, S. (eds.) CONFERENCE 2016, LNCS, vol. 9999, pp. 1--13.
-% Springer, Heidelberg (2016). \doi{10.10007/1234567890}
-
-% \bibitem{ref_book1}
-% Author, F., Author, S., Author, T.: Book title. 2nd edn. Publisher,
-% Location (1999)
-
-% \bibitem{ref_proc1}
-% Author, A.-B.: Contribution title. In: 9th International Proceedings
-% on Proceedings, pp. 1--2. Publisher, Location (2010)
-
-% \bibitem{ref_url1}
-% LNCS Homepage, \url{http://www.springer.com/lncs}. Last accessed 4
-% Oct 2017
 \end{thebibliography}
 \end{document}
