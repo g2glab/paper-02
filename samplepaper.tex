@@ -6,6 +6,7 @@
 %
 \usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{amsthm}
 % Used for displaying a sample figure. If possible, figure files should
 % be included in EPS format.
 %
@@ -14,7 +15,7 @@
 % \renewcommand\UrlFont{\color{blue}\rmfamily}
 
 \begin{document}
-\newtheorem{defi}{Definition}[section]
+\newtheorem{defi}[theorem]{Definition}
 %
 \title{Property Graph xxxx Format}
 %
@@ -53,29 +54,42 @@ In the context of graph analysis, the property graph model~\cite{angles} is beco
 
 
 \section{Definition}
+Here we define the property graph model that the serialization format handles.
+Since we aim at serialization of general property graphs, the model should be inclusive, that is, it should support many characteristics considered to be attributes of property graphs.
+The property graph model has the following characteristics:
 
-A property graph has the following characteristics:
-• It contains nodes and edges.
-• Each of nodes and edges can contain properties (key-value pairs).
-• Each node can be labeled with zero or more labels.
-• Each edge can be labeled with zero or more labels.
-• Edges can be directed or undirected.
+\begin{itemize}
+    \item It contains nodes and edges.
+    \item Each of nodes and edges can contain properties (key-value pairs).
+    \item Each node or edge can be labeled with zero or more labels.
+    \item Edges can be directed or undirected.
+\end{itemize}
 
-Definition  (Property Graph)
+\begin{defi}[Property Graph]
 
-A Property Graph is a tuple PG = ⟨V, E_u, E_d, S, P, s_e, t_e, e_e, l_v, l_e, p_v, p_e⟩, where:
-1. V is a set of nodes,
-2. E_u is a set of undirected edges,
-3. E_d is a set of directed edges,
-3. S is a set of strings,
-4. P contains each properties that has a form p = ⟨k,v⟩, where k ∈ S and v ∈ S,
-5. s_e : E_d → V is a function which yields the source of each directed edge,
-6. t_e : E_d → V is a function which yields the target of each directed edge,
-7, e_e: E_u → < V × V> is a function which yields the endpoints of each undirected edges,
-7. l_v : V → 2^S is a function mapping each nodes to their multiple labels,
-8. l_e : (E_d ∪ E_u) → 2^S is a function mapping each edge to their multiple labels,
-9. p_v : V → 2^P is a function used to assign nodes to their multiple properties.
-10. p_e : (E_d ∪ E_u) → 2^P is a function used to assign edges to their multiple properties.
+A \emph{Property Graph} is a tuple  \\ 
+$PG = \langle V, E_u, E_d, S, P, s_e, t_e, e_e, l_v, l_e, p_v, p_e\rangle$, where:
+\begin{enumerate}
+    \item $V$ is a set of nodes,
+    \item $E_u$ is a set of undirected edges,
+    \item $E_d$ is a set of directed edges,
+    \item $S$ is a set of strings,
+    \item $P$ contains each properties that has a form $p = \langle k,v \rangle$, where $k \in S$ and $v \in S$,
+    \item $s_e : E_d \to V$ is a function which yields the source of each directed edge,
+    \item $t_e : E_d \to V$ is a function which yields the target of each directed edge,
+    \item $e_e: E_u \to \langle V \times V \rangle$ is a function which yields the endpoints of each undirected edges,
+    \item $l_v : V \to 2^S$ is a function mapping each nodes to their multiple labels,
+    \item $l_e : (E_d \cup E_u) \to 2^S$ is a function mapping each edge to their multiple labels,
+    \item $p_v : V \to 2^P$ is a function used to assign nodes to their multiple properties.
+    \item $p_e : (E_d \cup E_u) \to 2^P$ is a function used to assign edges to their multiple properties.
+\end{enumerate}
+\end{defi}
+
+\begin{table}[htb]
+  \begin{tabular}{lcrr}
+    Neo4j & PGX & igraph & networkX \\
+  \end{tabular}
+\end{table}
 
 \section{Data Format}
 
