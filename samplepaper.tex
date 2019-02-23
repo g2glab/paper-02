@@ -54,8 +54,7 @@ In the context of graph analysis, the property graph model~\cite{angles} is beco
 
 
 \section{Definition}
-Here we define the property graph model that the serialization format handles.
-Since we aim at serialization of general property graphs, the model should be inclusive, that is, it should support many characteristics considered to be attributes of property graphs.
+Here we define the property graph model that the proposed serialization handles.
 The property graph model has the following characteristics:
 
 \begin{itemize}
@@ -65,31 +64,28 @@ The property graph model has the following characteristics:
     \item Edges can be directed or undirected.
 \end{itemize}
 
+Since we aim at serialization of general property graphs, the model should allow arbitrary number of properties and labels. It also can be a mixed graph, which includes both directed and undirected edges.
+We describe the definition of the model as follows.
+
 \begin{defi}[Property Graph]
 
 A \emph{Property Graph} is a tuple  \\ 
-$PG = \langle V, E_u, E_d, S, P, s_e, t_e, e_e, l_v, l_e, p_v, p_e\rangle$, where:
+$PG = \langle V, E_u, E_d, E, S, P, s_e, t_e, e_e, l_v, l_e, p_v, p_e\rangle$, where:
 \begin{enumerate}
     \item $V$ is a set of nodes,
     \item $E_u$ is a set of undirected edges,
     \item $E_d$ is a set of directed edges,
+    \item $E$ is a set edges where $E = E_d \cup E_u$,
     \item $S$ is a set of strings,
     \item $P$ contains each properties that has a form $p = \langle k,v \rangle$, where $k \in S$ and $v \in S$,
-    \item $s_e : E_d \to V$ is a function which yields the source of each directed edge,
-    \item $t_e : E_d \to V$ is a function which yields the target of each directed edge,
-    \item $e_e: E_u \to \langle V \times V \rangle$ is a function which yields the endpoints of each undirected edges,
+    \item $e: E \to \langle V \times V \rangle$ is a function which yields the endpoints of each directed or undirected edge (if the edge is directed, the first node is a source and the second node is a destination),
     \item $l_v : V \to 2^S$ is a function mapping each nodes to their multiple labels,
-    \item $l_e : (E_d \cup E_u) \to 2^S$ is a function mapping each edge to their multiple labels,
+    \item $l_e : E \to 2^S$ is a function mapping each edge to their multiple labels,
     \item $p_v : V \to 2^P$ is a function used to assign nodes to their multiple properties.
-    \item $p_e : (E_d \cup E_u) \to 2^P$ is a function used to assign edges to their multiple properties.
+    \item $p_e : E \to 2^P$ is a function used to assign edges to their multiple properties.
 \end{enumerate}
 \end{defi}
 
-\begin{table}[htb]
-  \begin{tabular}{lcrr}
-    Neo4j & PGX & igraph & networkX \\
-  \end{tabular}
-\end{table}
 
 \section{Data Format}
 
