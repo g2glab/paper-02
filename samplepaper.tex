@@ -57,6 +57,7 @@ In the context of graph analysis, the property graph model~\cite{angles} is beco
 In contrast to the standardized RDF, however, there are no standardized data models for property graphs.
 Here, we surveyed the general requirements for representing property graph data and designed a common property graph format, which can be converted to each of the specific database implementations. The common format independent of each database implementation will increase the interoperability of graph databases, and will make it easier for users to import accumulated graph data making the most of graph database engines.
 
+
 \section{Definition}
 Here we define the property graph model that the proposed serialization handles.
 We aim at serialization of wide range of property graphs such as graphs with arbitrary number of properties and labels. It also can be a mixed graph, which includes both directed and undirected edges. The property graph model has the following characteristics:
@@ -67,7 +68,6 @@ We aim at serialization of wide range of property graphs such as graphs with arb
     \item Each node or edge can be labeled with zero or more labels.
     \item Edges can be directed or undirected.
 \end{itemize}
-
 We describe the definition of the model as follows.
 
 \begin{defi}[Property Graph]
@@ -80,6 +80,7 @@ $PG = \langle V, E_u, E_d, E, S, P, e, l_v, l_e, p_v, p_e\rangle$, where:
     \item $E_d$ is a set of directed edges,
     \item $E$ is a set edges where $E = E_d \cup E_u$,
     \item $S$ is a set of strings,
+%TODO: Don't say the type of property is a string
     \item $P$ contains each properties that has a form $p = \langle k,v \rangle$, where $k \in S$ and $v \in S$,
     \item $e: E \to \langle V \times V \rangle$ is a function which yields the endpoints of each directed or undirected edge (if the edge is directed, the first node is a source and the second node is a destination),
     \item $l_v : V \to 2^S$ is a function mapping each nodes to their multiple labels,
