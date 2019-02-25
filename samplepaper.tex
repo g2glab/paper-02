@@ -44,14 +44,17 @@ Database Center for Life Science, Chiba 277-0871, Japan\\
 %
 \begin{abstract}
 Property graph is an intuitive data structure for expressing information as network graphs. Although a variety of graph databases are designed for managing data as property graph, the definitions of this data structure and its data formats are various and often depend on the implementation. Therefore, in this paper, we discussed general definition of property graph based on the observation of the existing graph databases, and proposed a practical data format which can store the most information included in other data formats. This data format is useful for keeping property graph data independent from graph database implementation, specially when we generate property graph data intermediately from other data sources in data integration pipelines. We also implemented a prototype of conversion tools to show that the data in this data format can be exchanged for various graph databases.
-We have designed a common property graph format which can be converted to each of the specific database implementations.
 \keywords{Property Graph \and Graph Database}
 \end{abstract}
 
 \section{Introduction}
 
-In the context of graph analysis, the property graph model~\cite{angles} is becoming popular; various graph database engines, including Neo4j~\cite{neo4j}, Oracle Labs PGX~\cite{pgx}, and Amazon Neptune~\cite{neptune}, adopt this model. These graph database engines support algorithms for traversal or analyzing graphs. However, currently not many datasets are consistently described in the property graph model, so the application of these powerful engines are limited.
-
+In the context of graph analysis, the property graph model~\cite{angles} is becoming popular; various graph database engines, including Neo4j~\cite{neo4j}, Oracle Labs PGX~\cite{pgx}, and Amazon Neptune~\cite{neptune}, adopt this model. These graph database engines support algorithms for traversal or analyzing graphs. 
+%However, currently not many datasets are consistently described in the property graph model, so the application of these powerful engines are limited.
+%Recently, a variety of graph database implementations dedicated to analyses on the property graph model have emerged. 
+%However, the property graph lacks standardized specifications and the RDF model and the property graph model are not interoperable.
+In contrast to the standardized RDF, there are no standardized data models for property graphs.
+Here, we surveyed the general requirements for representing property graph data and designed a common property graph format, which can be converted to each of the specific database implementations. The common format independent of each database implementation will increase the interoperability of graph databases, and will make it easier for users to import accumulated graph data making the most of graph database engines.
 
 \section{Definition}
 Here we define the property graph model that the proposed serialization handles.
