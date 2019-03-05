@@ -43,7 +43,13 @@ Database Center for Life Science, Chiba 277-0871, Japan\\
 \maketitle              % typeset the header of the contribution
 %
 \begin{abstract}
-Property graph is an intuitive data structure for expressing information as network graphs. Although a variety of graph databases are designed for managing data as property graph, the definitions of this data structure and its data formats are various and often depend on the implementation. Therefore, in this paper, we discussed general definition of property graph based on the observation of the existing graph databases, and proposed a practical data format which can store the most information included in other data formats. This data format is useful for keeping property graph data independent from graph database implementation, specially when we generate property graph data intermediately from other data sources in data integration pipelines. We also implemented a prototype of conversion tools to show that the data in this data format can be exchanged for various graph databases.
+%Property graph is an intuitive data structure for expressing information as network graphs.
+%Although a variety of graph databases are designed for managing data as property graph, the definitions of this data structure and its data formats are various and often depend on the implementation. 
+Recently, a variety of graph database implementations dedicated to analyses on the property graph model have emerged.
+However, the data structure of the property graph model is not standardized and depends on each implementation.
+%Therefore, in this paper, we discussed general definition of property graph based on the observation of the existing graph databases, and proposed a practical data format which can store the most information included in other data formats. 
+Here, we generalize the definition of the property graph model to cover various database implementations and propose serializations of property graph data. 
+This data format is useful for keeping property graph data independent from graph database implementation, specially when we generate property graph data intermediately from other data sources in data integration pipelines. We also implemented a prototype of conversion tools to show that the data in this data format can be exchanged for various graph databases.
 \keywords{Property Graph \and Graph Database}
 \end{abstract}
 
@@ -58,7 +64,7 @@ In contrast to the standardized RDF, however, there are no standardized data mod
 Here, we surveyed the general requirements for representing property graph data and designed a common property graph format, which can be converted to each of the specific database implementations. The common format independent of each database implementation will increase the interoperability of graph databases, and will make it easier for users to import accumulated graph data making the most of graph database engines.
 
 
-\section{Definition}
+\section{The property graph model}
 Here we define the property graph model that the proposed serialization handles.
 We aim at serialization of wide range of property graphs such as graphs with arbitrary number of properties and labels. It also can be a mixed graph, which includes both directed and undirected edges. The property graph model has the following characteristics:
 
@@ -91,7 +97,7 @@ $PG = \langle V, E_u, E_d, E, S, P, e, l_v, l_e, p_v, p_e\rangle$, where:
 \end{defi}
 
 
-\section{Data Format}
+\section{Serialization}
 
 Figure~\ref{fig:format-pg} shows an example of property graph format.
 
