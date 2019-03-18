@@ -73,19 +73,19 @@ We describe the definition of the model as follows.
 \begin{defi}[Property Graph]
 
 A \emph{Property Graph} is a tuple  \\ 
-$PG = \langle V, E_u, E_d, E, S, P, e, l_v, l_e, p_v, p_e\rangle$, where:
+$PG = \langle N, E_u, E_d, S, V, P, e, l_v, l_e, p_v, p_e\rangle$, where:
 \begin{enumerate}
-    \item $V$ is a set of nodes,
+    \item $N$ is a set of nodes,
     \item $E_u$ is a set of undirected edges,
     \item $E_d$ is a set of directed edges,
-    \item $E$ is a set edges where $E = E_d \cup E_u$,
+    \item $E$ is a set of edges where $E = E_d \cup E_u$,
     \item $S$ is a set of strings,
-%TODO: Don't say the type of property is a string
-    \item $P$ contains each properties that has a form $p = \langle k,v \rangle$, where $k \in S$ and $v \in S$,
-    \item $e: E \to \langle V \times V \rangle$ is a function which yields the endpoints of each directed or undirected edge (if the edge is directed, the first node is a source and the second node is a destination),
-    \item $l_v : V \to 2^S$ is a function mapping each nodes to their multiple labels,
+    \item $V$ is a set of values in arbitrary data types,
+    \item $P$ contains each properties that has a form $p = \langle k,v \rangle$, where $k \in S$ and $v \in V$,
+    \item $e: E \to \langle N \times N \rangle$ is a function which yields the endpoints of each directed or undirected edge (if the edge is directed, the first node is a source and the second node is a destination),
+    \item $l_v : N \to 2^S$ is a function mapping each nodes to their multiple labels,
     \item $l_e : E \to 2^S$ is a function mapping each edge to their multiple labels,
-    \item $p_v : V \to 2^P$ is a function used to assign nodes to their multiple properties.
+    \item $p_v : N \to 2^P$ is a function used to assign nodes to their multiple properties.
     \item $p_e : E \to 2^P$ is a function used to assign edges to their multiple properties.
 \end{enumerate}
 \end{defi}
