@@ -129,8 +129,8 @@ Figure~\ref{fig:format-pg} shows an example of property graph format.
     {"id":101, "labels":["Person"], "properties":{"name":["Shinzo Abe"], "country":["United States"]}}
   ],
   "edges":[
-    {"from":101, "to":104, "labels":["admires"], "properties":{"score":[20.0], "since":[2015]}},
-    {"from":102, "to":103, "labels":["collaborates"], "properties":{"since":[2010]}}
+    {"from":101, "to":104, "undirected":false, "labels":["admires"], "properties":{"score":[20.0], "since":[2015]}},
+    {"from":102, "to":103, "undirected":true, "labels":["collaborates"], "properties":{"since":[2010]}}
   ]
 }
 \end{verbatim}
