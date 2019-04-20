@@ -125,12 +125,12 @@ Figure~\ref{fig:format-pg} shows an example of property graph format.
 \begin{verbatim}
 {
   "nodes":[
-    {"_id":101, "_label":"person", "name":"Barack Obama", "country":"United States"}
-  , {"_id":101, "_label":"person", "name":"Shinzo Abe", "country":"United States"}
+    {"id":101, "labels":["Person"], "properties":{"name":["Barack Obama"], "country":["United States"]}},
+    {"id":101, "labels":["Person"], "properties":{"name":["Shinzo Abe"], "country":["United States"]}}
   ],
   "edges":[
-    {"_from":101, "_to":104, "_label":"admires", "score":20.0, "since":2015}
-  , {"_from":102, "_to":103, "_label":"collaborates", "since":2010}
+    {"from":101, "to":104, "labels":["admires"], "properties":{"score":[20.0], "since":[2015]}},
+    {"from":102, "to":103, "labels":["collaborates"], "properties":{"since":[2010]}}
   ]
 }
 \end{verbatim}
