@@ -107,12 +107,12 @@ Figure~\ref{fig:format-pg} shows an example of property graph format.
 \begin{scriptsize}
 \begin{verbatim}
 # NODES
-101  :person  name:"Barack Obama"  country:"United States"
-102  :person  name:"Shinzo Abe"  country:Japan
+101  :person  name:Alice  age:15  country:"United States"
+102  :person  :Student  name:Bob  country:Japan  country:Germany
 
 # EDGES
-101  104  :admires  score:20.0  since:2015
-102  103  :collaborates  since:2010
+101  -- 102  :sameSchool  :sameClass  since:2012
+102  -> 101  :likes  since:2015
 \end{verbatim}
 \end{scriptsize}
 \caption{Flat Text Format}
@@ -125,12 +125,12 @@ Figure~\ref{fig:format-pg} shows an example of property graph format.
 \begin{verbatim}
 {
   "nodes":[
-    {"id":101, "labels":["Person"], "properties":{"name":["Alice"], "country":["United States"]}},
-    {"id":102, "labels":["Person", "Student"], "properties":{"name":["Bob"], "country":["Japan"]}}
+    {"id":101, "labels":["Person"], "properties":{"name":["Alice"], "age":[15], "country":["United States"]}},
+    {"id":102, "labels":["Person", "Student"], "properties":{"name":["Bob"], "country":["Japan", "Germany"]}}
   ],
   "edges":[
     {"from":101, "to":102, "undirected":true, "labels":["sameSchool", "sameClass"], "properties":{"since":[2012]}},
-    {"from":101, "to":102, "labels":["likes"], "properties":{"since":[2015]}}
+    {"from":102, "to":101, "labels":["likes"], "properties":{"since":[2015]}}
   ]
 }
 \end{verbatim}
