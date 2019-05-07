@@ -49,7 +49,7 @@ Recently, a variety of graph database implementations dedicated to analyses on t
 However, the data structure of the property graph model is not standardized and depends on each implementation.
 %Therefore, in this paper, we discussed general definition of property graph based on the observation of the existing graph databases, and proposed a practical data format which can store the most information included in other data formats. 
 Here, we generalize the definition of the property graph model to cover various database implementations and propose serializations of property graph data. 
-This data format is independent from graph database implementation. It is useful when we generate property graph data intermediately from other data sources in data integration pipelines. We also implemented a prototype of conversion tools to show that the data in this data format can be exchanged for various graph databases.
+This data format is independent from graph database implementation and interoperable to provide a interoperable way to echange property graph data. The format is not only general and but also in an intuitive form, thus it is useful when we generate and maintain property graph data. To show the usefulness of this general model and format, We implemented prototype tools to convert from this format into specific formats of various graph database implementations. This format can provide an interoperable platform for generating, sharing and utilizing property graph data.
 \keywords{Property Graph \and Graph Database}
 \end{abstract}
 
