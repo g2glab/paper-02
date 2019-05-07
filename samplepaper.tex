@@ -61,7 +61,7 @@ In the context of graph analysis, the property graph model~\cite{angles} is beco
 %Recently, a variety of graph database implementations dedicated to analyses on the property graph model have emerged. 
 %However, the property graph lacks standardized specifications and the RDF model and the property graph model are not interoperable.
 In contrast to the standardized RDF, however, there are no standardized data models for property graphs.
-Here, we surveyed the general requirements for representing property graph data and designed a common property graph format, which can be converted to each of the specific database implementations. The common format independent of each database implementation will increase the interoperability of graph databases, and will make it easier for users to import accumulated graph data making the most of graph database engines.
+Here, we surveyed the general requirements for representing property graph data and designed a common property graph format, which can be converted to each of the specific database implementations mentioned above. A common format independent of different database implementations will increase the interoperability of graph databases, and will make it easier for users to import accumulated graph data making the most of graph database engines.
 
 
 \section{The property graph model}
@@ -71,6 +71,7 @@ We aim at serialization of wide range of property graphs such as graphs with arb
 \begin{itemize}
     \item It contains nodes and edges.
     \item Each of nodes and edges can contain properties (key-value pairs).
+    \item Each property can have multiple values.
     \item Each node or edge can be labeled with zero or more labels.
     \item Edges can be directed or undirected.
 \end{itemize}
@@ -82,15 +83,15 @@ A \emph{Property Graph} is a tuple  \\
 $PG = \langle N, E_u, E_d, S, V, P, e, l_v, l_e, p_v, p_e\rangle$, where:
 \begin{enumerate}
     \item $N$ is a set of nodes,
-    \item $E_u$ is a set of undirected edges,
-    \item $E_d$ is a set of directed edges,
-    \item $E$ is a set of edges where $E = E_d \cup E_u$,
-    \item $S$ is a set of strings,
-    \item $V$ is a set of values of arbitrary data types,
-    \item $P$ contains each properties that has a form $p = \langle k,v \rangle$, where $k \in S$ and $v \in V$,
-    \item $e: E \to \langle N \times N \rangle$ is a function which yields the endpoints of each directed or undirected edge (if the edge is directed, the first node is a source and the second node is a destination),
-    \item $l_v : N \to 2^S$ is a function mapping each nodes to their multiple labels,
-    \item $l_e : E \to 2^S$ is a function mapping each edge to their multiple labels,
+    \item $E_u$ is a set of undirected edges.
+    \item $E_d$ is a set of directed edges.
+    \item $E$ is a set of edges where $E = E_d \cup E_u$.
+    \item $S$ is a set of strings.
+    \item $V$ is a set of values of arbitrary data types.
+    \item $P$ is a set of properties. Each property has a form $p = \langle k,v \rangle$, where $k \in S$ and $v \in 2^V$.
+    \item $e: E \to \langle N \times N \rangle$ is a function which yields the endpoints of each directed or undirected edge (if the edge is directed, the first node is a source and the second node is a destination).
+    \item $l_v : N \to 2^S$ is a function mapping each nodes to their multiple labels.
+    \item $l_e : E \to 2^S$ is a function mapping each edge to their multiple labels.
     \item $p_v : N \to 2^P$ is a function used to assign nodes to their multiple properties.
     \item $p_e : E \to 2^P$ is a function used to assign edges to their multiple properties.
 \end{enumerate}
@@ -160,8 +161,8 @@ Figure~\ref{fig:format-flat} shows an example of the flat text PG format.
 
 
 \section{Conclusion}
-In this work, we defined property graph independently from graph database implementation and proposed practical data formats. We also implemented the prototype of tools to convert this data format to other formats. 
-It will increase the interoperability of graph databases, and will make it easier for users to import accumulated graph data making the most of graph database engines.
+In this work, we defined a property graph format independent of specific graph database implementations and proposed practical data formats. We also implemented a prototype of tools to convert this data format to other formats. 
+It will increase the interoperability of graph databases and make it easier for users to import accumulated graph data, making the most of graph database engines.
 %Future works include ..
 
 %
