@@ -99,7 +99,35 @@ $PG = \langle N, E_u, E_d, S, V, P, e, l_v, l_e, p_v, p_e\rangle$, where:
 
 
 \section{Serialization}
-According to the definition of property graph above, we propose data formats both in JSON and in flat text. While JSON format (JSON-PG) is useful in server-client communication, flat text format is visually easier to understand as well as enable to be split or concatenate horizontally.
+According to the definition of property graph above, we propose data formats both in flat text and in JSON. While the flat text format (PG) is visually easier to understand as well as enable to be split or concatenate horizontally, the JSON format (JSON-PG) is useful in server-client communication.
+
+Figure~\ref{fig:format-flat} shows an example of the flat text PG format.
+
+\begin{itemize}
+    \item Each line describes one node or one edge.
+    \item All elements in each line are separated by space or tab.
+    \item In nodes, the first column contains node ID.
+    \item In edges, the first three columns contain source node ID, direction, and destination node ID
+    \item Each line can contain arbitrarily many labels.
+    \item Each line can contain arbitrarily many properties (= key-value pairs).
+\end{itemize}
+
+\begin{figure}[!t]
+\vspace{2mm}
+\begin{scriptsize}
+\begin{verbatim}
+# NODES
+101  :person  name:Alice  age:15  country:"United States"
+102  :person  :Student  name:Bob  country:Japan  country:Germany
+
+# EDGES
+101 -- 102  :sameSchool  :sameClass  since:2012
+102 -> 101  :likes  since:2015
+\end{verbatim}
+\end{scriptsize}
+\caption{PG Format}
+\label{fig:format-flat}
+\end{figure}
 
 Figure~\ref{fig:format-json} shows an example of the JSON-PG format. This format basically follows the rules of the general JSON format and the definition of property graph above. However, labels and property values are described as arrays, while they are substantially lists with no order in the elements.  
 
@@ -126,38 +154,11 @@ Figure~\ref{fig:format-json} shows an example of the JSON-PG format. This format
 }
 \end{verbatim}
 \end{scriptsize}
-\caption{JSON Format (JSON-PG)}
+\caption{JSON-PG Format}
 \label{fig:format-json}
 \end{figure}
 
-Figure~\ref{fig:format-flat} shows an example of the flat text PG format.
-
-\begin{itemize}
-    \item Each line describes one node or one edge.
-    \item All elements in each line are separated by space or tab.
-    \item In nodes, the first column contains node ID.
-    \item In edges, the first three columns contain source node ID, direction, and destination node ID
-    \item Each line can contain arbitrarily many labels.
-    \item Each line can contain arbitrarily many properties (= key-value pairs).
-\end{itemize}
-
-\begin{figure}[!t]
-\vspace{2mm}
-\begin{scriptsize}
-\begin{verbatim}
-# NODES
-101  :person  name:Alice  age:15  country:"United States"
-102  :person  :Student  name:Bob  country:Japan  country:Germany
-
-# EDGES
-101 -- 102  :sameSchool  :sameClass  since:2012
-102 -> 101  :likes  since:2015
-\end{verbatim}
-\end{scriptsize}
-\caption{Flat Text Format}
-\label{fig:format-flat}
-\end{figure}
-
+We have implemented a command-line tool to convert data between PG and JSON-PG, as well as to transform them to the data loading formats for the main graph databases such as Neo4j, Oracle Labs PGX, and Amazon Neptune. The actual use cases of this tool show that the proposed data format has the capability to describe general property graph data which are used in existing graph databases. (https://github.com/g2gml/pg)
 
 
 \section{Conclusion}
