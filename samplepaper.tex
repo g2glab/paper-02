@@ -64,7 +64,7 @@ In contrast to the standardized RDF, however, there are no standardized data mod
 Here, we surveyed the general requirements for representing property graph data and designed a common property graph format, which can be converted to each of the specific database implementations mentioned above. A common format independent of different database implementations will increase the interoperability of graph databases, and will make it easier for users to import accumulated graph data making the most of graph database engines.
 
 
-\section{The property graph model}
+\section{Model Definition}
 Here we define the property graph model that the proposed serialization handles.
 We aim at serialization of wide range of property graphs such as graphs with arbitrary number of properties and labels. It also can be a mixed graph, which includes both directed and undirected edges. The property graph model has the following characteristics:
 
@@ -78,8 +78,8 @@ We aim at serialization of wide range of property graphs such as graphs with arb
 We describe the definition of the model as follows.
 
 \begin{defi}[Property Graph]
-
-A \emph{Property Graph} is a tuple  \\ 
+\leavevmode \\
+A \emph{Property Graph} is a tuple
 $PG = \langle N, E_u, E_d, S, V, P, e, l_v, l_e, p_v, p_e\rangle$, where:
 \begin{enumerate}
     \item $N$ is a set of nodes.
@@ -97,11 +97,10 @@ $PG = \langle N, E_u, E_d, S, V, P, e, l_v, l_e, p_v, p_e\rangle$, where:
 \end{enumerate}
 \end{defi}
 
-
 \section{Serialization}
 According to the definition of property graph above, we propose data formats both in flat text and in JSON. While the flat text format (PG) is visually easier to understand as well as enable to be split or concatenate horizontally, the JSON format (JSON-PG) is useful in server-client communication.
 
-Figure~\ref{fig:format-flat} shows an example of the flat text PG format.
+Figure~\ref{fig:example-pg} shows an example of the flat text PG format.
 
 \begin{itemize}
     \item Each line describes one node or one edge.
@@ -111,6 +110,40 @@ Figure~\ref{fig:format-flat} shows an example of the flat text PG format.
     \item Each line can contain arbitrarily many labels.
     \item Each line can contain arbitrarily many properties (= key-value pairs).
 \end{itemize}
+
+\begin{defi}[PG Format]
+\leavevmode \\
+\emph{PG format is described in the following EBNF notation.}
+\begin{scriptsize}
+\begin{verbatim}
+    PG         ::= (Node | Edge)+
+    Node       ::= ID Labels Properties NEWLINE
+    Edge       ::= ID Direction ID Labels Properties NEWLINE
+    Labels     ::= Label*
+    Properties ::= Properties*
+    Label      ::= ':' STRING
+    Property   ::= STRING ':' Value
+    Value      ::= STRING | NUMBER
+    Direction  ::= '--' | '->'
+\end{verbatim}
+\end{scriptsize}
+\label{fig:ebnf}
+\end{defi}
+
+Figure~\ref{fig:format-json} shows an example of the JSON-PG format. This format basically follows the rules of the general JSON format and the definition of property graph above. However, labels and property values are described as arrays, while they are substantially lists with no order in the elements.  
+
+\begin{itemize}
+    \item Nodes and edges are listed under \texttt{nodes} and \texttt{edges} elements, respectively.
+    \item Edge direction is defined with the boolean element \texttt{undirected}. By default it is false (= directed).
+    \item Labels are listed under the \texttt{labels} element.
+    \item Properties (= key-value pairs) are listed under the \texttt{properties} element.
+\end{itemize}
+
+We have implemented a command-line tool to convert data between PG and JSON-PG, as well as to transform them to the data loading formats for the main graph databases such as Neo4j, Oracle Labs PGX, and Amazon Neptune. The actual use cases of this tool show that the proposed data format has the capability to describe general property graph data which are used in existing graph databases. (https://github.com/g2gml/pg)
+
+\section{Conclusion}
+In this work, we defined a property graph format independent of specific graph database implementations and proposed practical data formats. We also implemented a prototype of tools to convert this data format to other formats. 
+It will increase the interoperability of graph databases and make it easier for users to import accumulated graph data, making the most of graph database engines.
 
 \begin{figure}[!t]
 \vspace{2mm}
@@ -125,18 +158,9 @@ Figure~\ref{fig:format-flat} shows an example of the flat text PG format.
 102 -> 101  :likes  since:2015
 \end{verbatim}
 \end{scriptsize}
-\caption{PG Format}
-\label{fig:format-flat}
+\caption{Example of PG}
+\label{fig:example-pg}
 \end{figure}
-
-Figure~\ref{fig:format-json} shows an example of the JSON-PG format. This format basically follows the rules of the general JSON format and the definition of property graph above. However, labels and property values are described as arrays, while they are substantially lists with no order in the elements.  
-
-\begin{itemize}
-    \item Nodes and edges are listed under \texttt{nodes} and \texttt{edges} elements, respectively.
-    \item Edge direction is defined with the boolean element \texttt{undirected}. By default it is false (= directed).
-    \item Labels are listed under the \texttt{labels} element.
-    \item Properties (= key-value pairs) are listed under the \texttt{properties} element.
-\end{itemize}
 
 \begin{figure}[!t]
 \vspace{2mm}
@@ -154,16 +178,11 @@ Figure~\ref{fig:format-json} shows an example of the JSON-PG format. This format
 }
 \end{verbatim}
 \end{scriptsize}
-\caption{JSON-PG Format}
+\caption{Example of JSON-PG}
 \label{fig:format-json}
 \end{figure}
 
-We have implemented a command-line tool to convert data between PG and JSON-PG, as well as to transform them to the data loading formats for the main graph databases such as Neo4j, Oracle Labs PGX, and Amazon Neptune. The actual use cases of this tool show that the proposed data format has the capability to describe general property graph data which are used in existing graph databases. (https://github.com/g2gml/pg)
 
-
-\section{Conclusion}
-In this work, we defined a property graph format independent of specific graph database implementations and proposed practical data formats. We also implemented a prototype of tools to convert this data format to other formats. 
-It will increase the interoperability of graph databases and make it easier for users to import accumulated graph data, making the most of graph database engines.
 %Future works include ..
 
 %
