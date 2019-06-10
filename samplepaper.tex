@@ -1,4 +1,4 @@
-    % This is samplepaper.tex, a sample chapter demonstrating the
+% This is samplepaper.tex, a sample chapter demonstrating the
 % LLNCS macro package for Springer Computer Science proceedings;
 % Version 2.20 of 2017/10/04
 %
@@ -45,38 +45,40 @@ Lifematics Inc., Tokyo 101-0041, Japan\\
 \begin{abstract}
 %Property graph is an intuitive data structure for expressing information as network graphs.
 %Although a variety of graph databases are designed for managing data as property graph, the definitions of this data structure and its data formats are various and often depend on the implementation. 
-Recently, a variety of graph database implementations dedicated to analyses on the property graph model have emerged.
-However, interoperable management of graph data is challenging because the property graph model varies depending on each implementation.
+Recently, a variety of graph database implementations adopting the property graph model have emerged.
+However, interoperable data management on these implementations is challenging due to the variations in the data model depending on the implementations.
 %Therefore, in this paper, we discussed general definition of property graph based on the observation of the existing graph databases, and proposed a practical data format which can store the most information included in other data formats. 
-Here, we generalize the definition of the property graph model to cover various database implementations and propose serializations of property graph data. 
-This data format is independent from graph database implementation and interoperable to provide a interoperable way to echange property graph data. The format is not only general and but also in an intuitive form, thus it is useful when we generate and maintain property graph data. To show the usefulness of this general model and format, We implemented prototype tools to convert from this format into specific formats of various graph database implementations. This format can provide an interoperable platform for generating, sharing and utilizing property graph data.
+Here, we redefined the property graph model to cover various database implementations and propose general serializations for property graphs. 
+This serialization format is independent from graph database implementation and provides an interoperable way to echange property graph data. This format is not only general and but also intuitive, thus it is useful when we generate and maintain property graph data. To show the usefulness of this general model and format, we implemented converters from this format into specific formats to load into various graph database implementations. This format can provide an interoperable platform for generating, sharing and utilizing property graph data.
 \keywords{Property Graph \and Graph Database}
 \end{abstract}
 
 \section{Introduction}
 Increasing amounts of scientific and social data are described and analyzed in the form of graphs.
-As a format of graph data to be publicly available, the Resource Description Framework (RDF) is widely used. 
+%As a format of graph data to be publicly available, the Resource Description Framework (RDF) is widely used. 
 In the context of graph analysis, the property graph model~\cite{angles} is becoming popular; various graph database engines, including Neo4j~\cite{neo4j}, Oracle Labs PGX~\cite{pgx}, and Amazon Neptune~\cite{neptune}, adopt this model. These graph database engines support algorithms for traversal or analyzing graphs. 
 %However, currently not many datasets are consistently described in the property graph model, so the application of these powerful engines are limited.
 %Recently, a variety of graph database implementations dedicated to analyses on the property graph model have emerged. 
 %However, the property graph lacks standardized specifications and the RDF model and the property graph model are not interoperable.
-In contrast to the standardized RDF, however, there are no standardized data models for property graphs.
+In contrast to the standardized RDF, however, 
+%there are no standardized data models for property graphs.
+property graphs lack the standardized model.
 Here, we surveyed the general requirements for representing property graph data and designed a common property graph format, which can be converted to each of the specific database implementations mentioned above. A common format independent of different database implementations will increase the interoperability of graph databases, and will make it easier for users to import accumulated graph data making the most of graph database engines.
 
 \section{Model Definition}
 Here we define the property graph model that the proposed serialization handles.
-For the purpose of exchange format, we allow wide range of property graphs such as graphs with arbitrary number of properties and labels. It also can be a mixed graph, which includes both directed and undirected edges. The property graph model has the following characteristics:
+For the purpose of data exchange, we aim to cover a wide range of property graphs such as graphs with arbitrary number of properties and labels. It also can be a mixed graph, which includes both directed and undirected edges. The property graph model has the following characteristics:
 
 \begin{itemize}
-    \item It contains nodes and edges.
-    \item Each of nodes and edges can contain properties (key-value pairs).
+    \item A property graph contains nodes and edges.
+    \item Each of nodes and edges can have properties (key-value pairs).
     \item Each property can have multiple values.
-    \item Each node or edge can be labeled with zero or more labels.
-    \item Edges can be directed or undirected.
+    \item Each of nodes and edges can be labeled with zero or more labels.
+    \item Each edge can be directed or undirected.
 \end{itemize}
 We describe the definition of the model as follows.
 
-\begin{defi}[Property Graph]
+\begin{defi}[Property Graph Model]
 \leavevmode \vspace{1mm} \\
 A \emph{Property Graph} is a tuple
 $PG = \langle N, E_u, E_d, S, V, P, e, l_v, l_e, p_v, p_e\rangle$, where:
