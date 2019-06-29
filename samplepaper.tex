@@ -49,7 +49,7 @@ Recently, a variety of graph database implementations adopting the property grap
 However, interoperable data management on these implementations is challenging due to the variations in the data model depending on the implementations.
 %Therefore, in this paper, we discussed general definition of property graph based on the observation of the existing graph databases, and proposed a practical data format which can store the most information included in other data formats. 
 Here, we redefined the property graph model to cover various database implementations and propose serialization for property graphs. 
-This model is independent from graph database implementation and provides an interoperable way to echange property graph data. The proposed serialization is not only general and but also intuitive, thus it is useful when we generate and maintain property graph data. To show the practical usage of this general model and serialization, we implemented converters from formats based on our model into existing formats to load into various graph database implementations. This work provides an interoperable platform for generating, sharing and utilizing property graph data.
+This model is independent from graph database implementation and provides an interoperable way to echange property graph data. The proposed serialization is not only general and but also intuitive, thus it is useful when we generate and maintain property graph data. To show the practical usage of this general model and serialization, we implemented converters from formats based on our model into existing formats to load into various graph databases. This work provides an interoperable platform for generating, sharing and utilizing property graph data.
 \keywords{Property Graph \and Graph Database}
 \end{abstract}
 
@@ -63,7 +63,7 @@ In the context of graph analysis, the property graph model~\cite{angles} is beco
 In contrast to the standardized RDF, however, 
 %there are no standardized data models for property graphs.
 property graphs lack the standardized model.
-Here, we surveyed the general requirements for representing property graph data and designed two common property graph formats in flat text and JSON. These formats can be converted to each of the specific database implementations mentioned above. Common formats independent of different database implementations will increase the interoperability of graph databases, and will make it easier for users to import accumulated graph data making the most of graph database engines.
+Here, we surveyed the general requirements for representing property graph data and designed two common property graph formats in flat text and JSON. These formats can be converted for each of the specific databases mentioned above. Common formats independent of different database implementations will increase the interoperability of graph databases, and will make it easier for users to import accumulated graph data making the most of graph database engines.
 
 \section{Model Definition}
 Here we define the property graph model that the proposed serialization handles.
