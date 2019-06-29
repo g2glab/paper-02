@@ -48,8 +48,8 @@ Lifematics Inc., Tokyo 101-0041, Japan\\
 Recently, a variety of graph database implementations adopting the property graph model have emerged.
 However, interoperable data management on these implementations is challenging due to the variations in the data model depending on the implementations.
 %Therefore, in this paper, we discussed general definition of property graph based on the observation of the existing graph databases, and proposed a practical data format which can store the most information included in other data formats. 
-Here, we redefined the property graph model to cover various database implementations and propose general serializations for property graphs. 
-This serialization format is independent from graph database implementation and provides an interoperable way to echange property graph data. This format is not only general and but also intuitive, thus it is useful when we generate and maintain property graph data. To show the usefulness of this general model and format, we implemented converters from this format into specific formats to load into various graph database implementations. This format can provide an interoperable platform for generating, sharing and utilizing property graph data.
+Here, we redefined the property graph model to cover various database implementations and propose serialization for property graphs. 
+This model is independent from graph database implementation and provides an interoperable way to echange property graph data. The proposed serialization is not only general and but also intuitive, thus it is useful when we generate and maintain property graph data. To show the practical usage of this general model and serialization, we implemented converters from formats based on our model into existing formats to load into various graph database implementations. This work provides an interoperable platform for generating, sharing and utilizing property graph data.
 \keywords{Property Graph \and Graph Database}
 \end{abstract}
 
@@ -139,11 +139,11 @@ Also, Figure~\ref{fig:example-json} shows an example of the JSON-PG format. This
     \item Properties (= key-value pairs) are listed under the \texttt{properties} element.
 \end{itemize}
 
-We have implemented a command-line tool to convert data between PG and JSON-PG, as well as to transform them to the data loading formats for the main graph databases such as Neo4j, Oracle Labs PGX, and Amazon Neptune. The actual use cases of this tool show that the proposed data format has the capability to describe general property graph data which are used in existing graph databases. (https://github.com/g2gml/pg)
+We have implemented a command-line tool to convert data between PG and JSON-PG, as well as to transform them to the data loading formats for the main graph databases such as Neo4j, Oracle Labs PGX, and Amazon Neptune. The actual use cases of this tool show that the proposed data format has the capability to describe general property graph data which are used in existing graph databases. (https://github.com/g2glab/pg)
 
 \section{Conclusion}
 In this work, we redefined the property graph model independent of specific graph database implementations and proposed practical data formats. We also implemented a prototype of tools to convert this data format to other formats. 
-It will increase the interoperability of graph databases and make it easier for users to import accumulated graph data, making the most of graph database engines.
+This work will increase the interoperability of graph databases and make it easier for users to import accumulated graph data, making the most of graph database engines.
 
 \begin{figure}[!t]
 \begin{scriptsize}
