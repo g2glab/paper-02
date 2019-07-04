@@ -46,10 +46,10 @@ Lifematics Inc., Tokyo 101-0041, Japan\\
 %Property graph is an intuitive data structure for expressing information as network graphs.
 %Although a variety of graph databases are designed for managing data as property graph, the definitions of this data structure and its data formats are various and often depend on the implementation. 
 Recently, a variety of graph database implementations adopting the property graph model have emerged.
-However, interoperable data management on these implementations is challenging due to the variations in the data model depending on the implementations.
+However, interoperable data management on these implementations is challenging due to the different data models being used.
 %Therefore, in this paper, we discussed general definition of property graph based on the observation of the existing graph databases, and proposed a practical data format which can store the most information included in other data formats. 
-Here, we redefined the property graph model to cover various database implementations and propose serialization for property graphs. 
-This model is independent from graph database implementation and provides an interoperable way to echange property graph data. The proposed serialization is not only general and but also intuitive, thus it is useful when we generate and maintain property graph data. To show the practical usage of this general model and serialization, we implemented converters from formats based on our model into existing formats to load into various graph databases. This work provides an interoperable platform for generating, sharing and utilizing property graph data.
+Here, we redefined the property graph model to cover various database implementations and propose the serialization for property graphs. 
+This model is independent from specific graph database implementations and provides an interoperable way to exchange property graph data. The proposed serialization is not only general and but also intuitive, thus it is useful for generating and maintaining property graph data. To show the practical usage of this general model and its serialization, we implemented converters from formats based on our model into existing formats, which can then be to load into various graph databases. This work provides an interoperable platform for generating, sharing and utilizing property graph data.
 \keywords{Property Graph \and Graph Database}
 \end{abstract}
 
@@ -63,18 +63,18 @@ In the context of graph analysis, the property graph model~\cite{angles} is beco
 In contrast to the standardized RDF, however, 
 %there are no standardized data models for property graphs.
 property graphs lack the standardized model.
-Here, we surveyed the general requirements for representing property graph data and designed two common property graph formats in flat text and JSON. These formats can be converted for each of the specific databases mentioned above. Common formats independent of different database implementations will increase the interoperability of graph databases, and will make it easier for users to import accumulated graph data making the most of graph database engines.
+Here, we surveyed the general requirements for representing property graph data and designed two common property graph formats as flat text and JSON. These formats can be converted into specific formats for each of the databases mentioned above. Common formats independent of certain database implementations will increase the interoperability of graph databases, and will make it easier for users to import accumulated graph data.
 
 \section{Model Definition}
-Here we define the property graph model that the proposed serialization handles.
-For the purpose of data exchange, we aim to cover a wide range of property graphs such as graphs with arbitrary number of properties and labels. It also can be a mixed graph, which includes both directed and undirected edges. The property graph model has the following characteristics:
+Here we define the property graph model independent of specific graph database implementations.
+For the purpose of data exchange, we aim to cover a wide range of property graphs such as graphs with an arbitrary number of properties and labels, and mixed graphs with both directed and undirected edges. The property graph model has the following characteristics:
 
 \begin{itemize}
     \item A property graph contains nodes and edges.
-    \item Each of nodes and edges can have properties (key-value pairs).
+    \item Nodes and edges can have properties (key-value pairs).
     \item Each property can have multiple values.
-    \item Each of nodes and edges can have zero or more labels.
-    \item Each edge can be directed or undirected.
+    \item Nodes and edges can have zero or more labels.
+    \item Edges can be directed or undirected.
 \end{itemize}
 We describe the definition of the model as follows.
 
@@ -89,19 +89,19 @@ $PG = \langle N, E_u, E_d, S, V, P, e, l_v, l_e, p_v, p_e\rangle$, where:
     \item $E$ is a set of edges where $E = E_d \cup E_u$.
     \item $S$ is a set of strings.
     \item $V$ is a set of values of arbitrary data types.
-    \item $P$ is a set of properties. Each property has a form $p = \langle k,v \rangle$, where $k \in S$ and $v \in 2^V$.
+    \item $P$ is a set of properties. Each property has the form $p = \langle k,v \rangle$, where $k \in S$ and $v \in 2^V$.
     \item $e: E \to \langle N \times N \rangle$ is a function which yields the endpoints of each directed or undirected edge (if the edge is directed, the first node is a source and the second node is a destination).
-    \item $l_v : N \to 2^S$ is a function mapping each nodes to their multiple labels.
-    \item $l_e : E \to 2^S$ is a function mapping each edge to their multiple labels.
+    \item $l_v : N \to 2^S$ is a function mapping each node to its multiple labels.
+    \item $l_e : E \to 2^S$ is a function mapping each edge to its multiple labels.
     \item $p_v : N \to 2^P$ is a function used to assign nodes to their multiple properties.
     \item $p_e : E \to 2^P$ is a function used to assign edges to their multiple properties.
 \end{enumerate}
 \end{defi}
 
 \section{Serialization}
-According to the definition of property graph above, we propose data formats both in flat text and in JSON. While the flat text format (PG) is suitable for reading and writing by human, the JSON format (JSON-PG) is useful in server-client communication.
+According to the definition of the property graph model above, we propose data formats both in flat text and in JSON. While the flat text format (PG) is suited for human readability, the JSON format (JSON-PG) is best used for server-client communication.
 
-The syntax of the flat text PG format is described below and Figure~\ref{fig:example-pg} shows its example.
+The syntax of the flat text PG format is described below and an example is given in Figure~\ref{fig:example-pg}.
 
 \begin{itemize}
     \item Each line describes one node or one edge.
@@ -130,7 +130,7 @@ The syntax of the flat text PG format is described below and Figure~\ref{fig:exa
 \end{scriptsize}
 \end{defi}
 
-Also, Figure~\ref{fig:example-json} shows an example of the JSON-PG format. This format basically follows the rules of the general JSON format and the definition of property graph above. However, labels and property values are described as arrays, while they are substantially lists with no order in the elements.  
+Further, Figure~\ref{fig:example-json} shows an example of the JSON-PG format. This format basically follows the rules of the general JSON format and the definition of the property graph above. However, labels and property values are described as arrays, while they are substantially lists of elements with no specific order.  
 
 \begin{itemize}
     \item Nodes and edges are listed under \texttt{nodes} and \texttt{edges} elements, respectively.
@@ -139,11 +139,10 @@ Also, Figure~\ref{fig:example-json} shows an example of the JSON-PG format. This
     \item Properties (= key-value pairs) are listed under the \texttt{properties} element.
 \end{itemize}
 
-We have implemented a command-line tool to convert data between PG and JSON-PG, as well as to transform them to the data loading formats for the main graph databases such as Neo4j, Oracle Labs PGX, and Amazon Neptune. The actual use cases of this tool show that the proposed data format has the capability to describe general property graph data which are used in existing graph databases. (https://github.com/g2glab/pg)
+We have implemented a command-line tool to convert data between PG and JSON-PG, as well as to transform these formats into data loading formats for well-known graph databases such as Neo4j, Oracle Labs PGX, and Amazon Neptune. The actual use cases of this tool show that the proposed data format has the capability to describe general property graph data begin used in existing graph databases. (https://github.com/g2glab/pg)
 
 \section{Conclusion}
-In this work, we redefined the property graph model independent of specific graph database implementations and proposed practical data formats. We also implemented tools to convert our formats into existing formats. 
-This work will increase the interoperability of graph databases and make it easier for users to import accumulated graph data, making the most of graph database engines.
+In this work, we redefined the property graph model independent of specific graph database implementations and proposed practical data formats. Furthermore, we implemented tools to convert our formats into existing formats which will increase the interoperability of graph databases and make it easier for users to import accumulated graph data.
 
 \begin{figure}[!t]
 \begin{scriptsize}
