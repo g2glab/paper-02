@@ -78,7 +78,7 @@ $PG = \langle N, E_d, E_u, S, V, P, e, l_n, l_e, p_n, p_e\rangle$, where:
     \item $S$ is a set of strings.
     \item $V$ is a set of values of arbitrary data types.
     \item $P$ is a set of properties. Each property has the form $p = \langle k,v \rangle$, where $k \in S$ and $v \in 2^V$.
-    \item $e: E \to \langle N \times N \rangle$ is a function which yields the endpoints of each directed or undirected edge (if the edge is directed, the first node is a source and the second node is a destination).
+    \item $e: E \to \langle N \times N \rangle$ is a function which yields the endpoints of each directed or undirected edge (if the edge is directed, the first node is the source and the second node is the destination).
     \item $l_n : N \to 2^S$ is a function mapping each node to its multiple labels.
     \item $l_e : E \to 2^S$ is a function mapping each edge to its multiple labels.
     \item $p_n : N \to 2^P$ is a function used to assign nodes to their multiple properties.
@@ -94,8 +94,8 @@ The flat text PG format has the following characteristics, and an example is giv
 \begin{itemize}
     \item Each line describes a node or an edge.
     \item All elements in each line are separated by space or tab.
-    \item In each of the node lines, the first column contains node ID.
-    \item In each of the edge lines, the first three columns contain source node ID, direction, and destination node ID.
+    \item In each of the node lines, the first column contains the node ID.
+    \item In each of the edge lines, the first three columns contain the source node ID, the direction, and the destination node ID.
     \item Each line can contain an arbitrary number of labels.
     \item Each line can contain an arbitrary number of properties (key-value pairs).
 \end{itemize}
